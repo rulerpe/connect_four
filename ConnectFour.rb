@@ -79,23 +79,33 @@ class Game
 		return false
 	end
 
-	def hor(x,y)
-		if (@board.grid[x][y].value == @board.grid[x-1][y].value)
-			@hor_arr += 1
-		end
-		if @hor_arr == 4
+	def hor(x,y,color)
+		if check(x-3,y,color) ||check(x-2,y,color)||check(x-1,y,color)||check(x,y,color)
 			return true
 		else
 			return false
 		end
 	end
 
-	def ver(x,y)
+	def ver(x,y,color)
 	end
 
-	def dig(x,y)
+	def dig(x,y,color)
 	end
 
+	def check(x,y,color)
+		if x+3 > 6 || y+3 > 5 || x < 0 || y < 0
+			return false
+		else
+			arr = @board.grid[x..x+3][y].select do |x|
+				x.value == color
+			end
+			if arr.length == 4
+				return true
+			end
+		end
+		return true
+	end
 
 end
 

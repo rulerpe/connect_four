@@ -76,11 +76,11 @@ describe Game do
 
 	describe "@win?" do
 		before do
-	#		@test_game.board.grid[0..2][3] = Cell.new("O")
+			@test_game.board.grid[0..2][3] = Cell.new("X")
 		end
 		it "return true when 4 connects horizontally" do
 			
-			expect(@test_game.win?).to eql(true)
+			expect(@test_game.win?(@test_game.player1)).to eql(true)
 			
 		end
 =begin
