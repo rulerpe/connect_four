@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Cell do
 	before do
-		@test_cell = Cell.new ""
+		@test_cell = Cell.new "-"
 	end
 
 	it "creates empty cell" do
-		expect(@test_cell.value).to eql("")
+		expect(@test_cell.value).to eql("-")
 	end
 
 	it "update cell value" do
@@ -22,7 +22,7 @@ describe Board do
 	end
 
 	it "initialize board" do
-		expect(@test_board.grid[6][5].value).to eql("")
+		expect(@test_board.grid[6][5].value).to eql("-")
 	end
 
 end
@@ -67,7 +67,7 @@ describe Game do
 
 	describe "#cul_full?" do
 		before do
-			@test_game.board.grid[2][0..5] = Cell.new("X")
+			@test_game.board.grid[2][0..4] = Cell.new("X")
 		end
 		it "return false if cul in full" do
 			expect(@test_game.cul_full?(2)).to eql(false)
@@ -75,32 +75,74 @@ describe Game do
 	end
 
 	describe "@win?" do
-		before do
-			@test_game.board.grid[0..2][3] = Cell.new("X")
-		end
-		it "return true when 4 connects horizontally" do
-			
-			expect(@test_game.win?(@test_game.player1)).to eql(true)
-			
-		end
-=begin
-		it "return true when 4 connects vertically" do
+		describe "horizontally win" do
 			before do
-				@test_game.board.grid[1..4][3] = Cell.new("X")
+				@test_game.board.grid[0..3].each_index do|n|
+					@test_game.board.grid[n][3] = Cell.new("X")	
+				end
 			end
-			expect(@test_game.win?).to eql(true)
+			
+			it "return true when 4 connects horizontally" do
+				expect(@test_game.win?(@test_game.player1)).to eql(true)
+				
+			end
 		end
 
-		it "return true when 4 connects diagonally" do
+		describe "vertically win" do
 			before do
-				@test_game.board.grid[0][0] = Cell.new("X")
-				@test_game.board.grid[1][1] = Cell.new("X")
-				@test_game.board.grid[2][2] = Cell.new("X")
-				@test_game.board.grid[3][3] = Cell.new("X")
+				@test_game.board.grid[3][1..4].each_index do|n| 
+					@test_game.board.grid[3][n]= Cell.new("X")
+				end
 			end
-			expect(@test_game.win?).to eql(true)
+
+			it "return true when 4 connects vertically" do			
+				expect(@test_game.win?(@test_game.player1)).to eql(true)
+			end
 		end
-=end
+
+		describe "diagonally l to r win" do
+			before do
+				i = 0
+				4.times do 
+					@test_game.board.grid[2+i][2+i] = Cell.new("X")	
+					i += 1
+				end
+			end
+
+			it "return true when 4 connects diagonally" do
+				expect(@test_game.win?(@test_game.player1)).to eql(true)
+			end
+
+		end
+
+		describe "diagonally r to l win" do
+			before do
+				i = 0
+				4.times do 
+					@test_game.board.grid[6-i][5-i] = Cell.new("X")	
+					i += 1
+				end
+			end
+
+			it "return true when 4 connects diagonally" do
+				expect(@test_game.win?(@test_game.player1)).to eql(true)
+			end
+		end
+	end
+
+	describe "#hor" do
+		before do
+			@test_game.board.grid[0..3].each_index do|n|
+				@test_game.board.grid[n][3] = Cell.new("X")		
+			end	
+		end
+		it "return ture" do			
+			expect(@test_game.hor(0,3,"X")).to eql(true)
+		end
+		it "return false since out of bound" do
+			expect(@test_game.hor(9,3,"X")).to eql(false)
+		end
+
 	end
 
 end
